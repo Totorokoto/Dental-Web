@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> Zubieto Dental Clinic Dashboard</title>
+  <link rel="stylesheet" href="Dental_Design.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Zubieto Dental Clinic</h2>
+      <nav>
+        <ul>
+          <li>Dashboard</li>
+          <li class="section-title">CLINIC</li>
+          <li>Reservation</li>
+          <li>Patients</li>
+          <li>Treatments</li>
+          <li>Staff List</li>
+          <li class="section-title">FINANCE</li>
+          <li>Accounts</li>
+          <li>Sales</li>
+          <li>Purchases</li>
+          <li>Payment Method</li>
+          <li class="section-title">PHYSICAL ASSET</li>
+          <li>Stocks</li>
+          <li>Peripherals</li>
+          <li>Reports</li>
+          <li>Customer Support</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumbs">Patient list > Patient detail</div>
+        <div class="user-info">
+          <input type="text" placeholder="Search..." />
+          <button>+</button>
+          <span>Admin</span>
+        </div>
+      </header>
+
+      <section class="patient-section">
+        <div class="patient-header">
+          <div class="avatar"></div>
+          <div class="name">Patient’s Name</div>
+          <button class="btn-appointment">Create Appointment</button>
+        </div>
+
+        <div class="tabs">
+          <span class="tab">Patient Information</span>
+          <span class="tab">Appointment History</span>
+          <span class="tab">Next Treatment</span>
+          <span class="tab active">Medical Record</span>
+        </div>
+
+        <div class="services">
+          <h3>Services</h3>
+          <div class="service-card">
+            <div class="image-placeholder"></div>
+            <div class="service-details">
+              <p class="title"></p>
+              <p class="description"></p>
+              <p class="description"></p>
+              <p class="description short"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
