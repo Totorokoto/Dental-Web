@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> Zubieto Dental Clinic Dashboard</title>
+  <link rel="stylesheet" href="Dental_Design.css" />
+  <link npm i bootstrap-icons />
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Zubieto Dental Clinic</h2>
+      <nav>
+        <ul>
+          <li>Dashboard</li>
+          <li class="section-title">CLINIC</li>
+          <li>Reservation</li>
+          <li class="active"><a href="Patients.html">Patients</a></li>
+          <li>Treatments</li>
+          <li>Staff List</li>
+          <li class="section-title">FINANCE</li>
+          <li>Accounts</li>
+          <li>Sales</li>
+          <li>Purchases</li>
+          <li>Payment Method</li>
+          <li class="section-title">PHYSICAL ASSET</li>
+          <li>Stocks</li>
+          <li>Peripherals</li>
+          <li>Reports</li>
+          <li>Customer Support</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <h2>Patient</h2>
+        
+        <div class="user-info">
+          <input type="text" placeholder="Search..." />
+          <button>+</button>
+          <span>Admin</span>
+        </div>
+      </header>
+
+      <div class="breadcrumbs">Patient list > Patient detail</div>
+
+      <div class="patients-list-section">
+  <div class="patients-header">
+    <div class="tabs">
+      <button class="tab active">Active Treatment</button>
+      <button class="tab">Inactive Treatment</button>
+    </div>
+    <div class="patient-count">90 <span>total patients</span></div>
+    <div class="patient-actions">
+      <button class="view-toggle"><i></i></button>
+      <button class="view-toggle grid"><i></i></button>
+      <button class="add-patient">+ Add Patient</button>
+    </div>
+  </div>
+
+  <table class="patients-table">
+    <thead>
+      <tr>
+        <th><input type="checkbox" /></th>
+        <th>Patient Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Registered</th>
+        <th>Last Visit</th>
+        <th>Last Treatment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Example row -->
+      <tr>
+        <td><input type="checkbox" /></td>
+        <td> Patient 1</td>
+        <td></td>
+        <td></td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <!-- Repeat rows -->
+    </tbody>
+  </table>
+</div>

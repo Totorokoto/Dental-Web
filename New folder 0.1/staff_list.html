@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> Zubieto Dental Clinic Dashboard</title>
+  <link rel="stylesheet" href="Dental_Design.css" />
+  <link npm i bootstrap-icons />
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Zubieto Dental Clinic</h2>
+      <nav>
+        <ul>
+          <li>Dashboard</li>
+          <li class="section-title">CLINIC</li>
+          <li>Reservation</li>
+          <li><a href="Patients.html">Patients</a></li>
+          <li>Treatments</li>
+          <li class="active">Staff List<a href="staff_list.html">Patients</a></li>
+          <li class="section-title">FINANCE</li>
+          <li>Accounts</li>
+          <li>Sales</li>
+          <li>Purchases</li>
+          <li>Payment Method</li>
+          <li class="section-title">PHYSICAL ASSET</li>
+          <li>Stocks</li>
+          <li>Peripherals</li>
+          <li>Reports</li>
+          <li>Customer Support</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <h2>Patient</h2>
+        
+        <div class="user-info">
+          <input type="text" placeholder="Search..." />
+          <button>+</button>
+          <span>Admin</span>
+        </div>
+      </header>
+
+      <div class="breadcrumbs">Patient list > Patient detail</div>
+
+  <div class="main">
+    <div class="header">
+      <h1>Staff List</h1>
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <button class="button" style="margin-left: 10px;">+ Add Doctor</button>
+      </div>
+    </div>
+    <div class="tab-section">
+      <button class="active-tab">Doctor Staff</button>
+      <button>General Staff</button>
+    </div>
+    <p><strong>100 Doctor</strong></p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>CONTACT</th>
+          <th>WORKING DAYS</th>
+          <th>ASSIGNED TREATMENT</th>
+          <th>TYPE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="profile-img"></span>Name...<br><small>Dentist</small></td>
+          <td>---</td>
+          <td>---</td>
+          <td>---</td>
+          <td>---</td>
+        </tr>
+        <!-- Repeat rows as needed -->
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

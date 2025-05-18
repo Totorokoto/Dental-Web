@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> Zubieto Dental Clinic Dashboard</title>
+  <link rel="stylesheet" href="Dental_Design.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Zubieto Dental Clinic</h2>
+      <nav>
+        <ul>
+          <li>Dashboard</li>
+          <li class="section-title">CLINIC</li>
+          <li>Reservation</li>
+          <li class="active"><a href="Patients.html">Patients</a></li>
+          <li>Treatments</li>
+          <li>Staff List<a href="staff_list.html">Patients</a></li>
+          <li class="section-title">FINANCE</li>
+          <li>Accounts</li>
+          <li>Sales</li>
+          <li>Purchases</li>
+          <li>Payment Method</li>
+          <li class="section-title">PHYSICAL ASSET</li>
+          <li>Stocks</li>
+          <li>Peripherals</li>
+          <li>Reports</li>
+          <li>Customer Support</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <h2>Patient</h2>
+        
+        <div class="user-info">
+          <input type="text" placeholder="Search..." />
+          <button>+</button>
+          <span>Admin</span>
+        </div>
+      </header>
+
+      <div class="breadcrumbs">Patient list > Patient detail</div>
+
+      <section class="patient-section">
+        <div class="patient-header">
+          <div class="avatar"></div>
+          <div class="name">Patient’s Name</div>
+          <button class="change_data">Change Data</button>
+        </div>
+
+        <div class="tabs">
+          <span class="tab active"><a href="Patients.html">Patient Information</a></span>
+          <span class="tab"><a href="#">Appointment History</a></span>
+          <span class="tab"><a href="#">Next Treatment</a></span>
+          <span class="tab"><a href="Medical_record.html">Medical Record</a></span>
+        </div>
+
+        <div class="section patient-data">
+        <h4>PATIENT DATA</h4>
+        <div class="grid">
+          <div><label>Age</label><div class="placeholder"></div></div>
+          <div><label>Gender</label><div class="placeholder"></div></div>
+          <div><label>Email Address</label><div class="placeholder"></div></div>
+          <div><label>Mobile Number</label><div class="placeholder"></div></div>
+          <div><label>Address</label><div class="placeholder"></div></div>
+        </div>
+      </div>
+
+        <div class="section medical-data">
+        <h4>MEDICAL DATA <small>Last Update DD/MM/YY</small></h4>
+        <div class="grid">
+          <div><label>Blood Pressure</label><div class="placeholder"></div></div>
+          <div><label>Particular Sickness</label><div class="placeholder"></div></div>
+        </div>
+      </div>
+      </section>
+    </main>
