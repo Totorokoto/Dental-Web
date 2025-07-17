@@ -1,0 +1,276 @@
+/* style.css */
+
+/* ============================
+   1. CORE LAYOUT STRUCTURE
+   ============================ */
+body {
+    background-color: #f4f7f6;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    z-index: 1030;
+    background-color: #ffffff;
+}
+
+.topbar {
+    height: 70px;
+    position: fixed;
+    top: 0;
+    left: 250px; 
+    width: calc(100% - 250px); 
+    background-color: #ffffff;
+    padding: 0 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    z-index: 1020;
+    display: flex;
+    align-items: center;
+}
+
+.main-content-area {
+    margin-left: 250px; 
+    margin-top: 70px;    
+    padding: 2rem;
+    width: calc(100% - 250px);
+}
+
+
+/* ============================
+   2. COMPONENT STYLES
+   ============================ */
+
+/* Sidebar Header & Nav */
+
+.sidebar {
+    /* Make the sidebar a flex container */
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-footer {
+    /* This pushes the footer to the bottom of the flex container */
+    margin-top: auto;
+}
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.sidebar .nav-link {
+    padding: 10px 20px;
+    color: #555;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: #e9f5ff;
+    color: #007bff;
+    border-radius: 5px;
+    margin: 0 10px;
+    padding: 10px 10px;
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+    width: 20px; /* Align icons */
+    text-align: center;
+}
+
+.sidebar .nav-link.text-uppercase {
+    font-size: 0.75rem;
+    color: #888;
+    padding: 15px 20px 5px 20px;
+    font-weight: 600;
+}
+
+/* Topbar Content */
+.topbar .page-title {
+    font-size: 1.5rem;
+}
+
+.topbar .breadcrumb {
+    font-size: 0.9rem;
+}
+
+.topbar .form-control {
+    width: 200px;
+}
+
+/* NEW: Patient Header (Avatar/Name) */
+.patient-header {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    margin-bottom: 2rem;
+}
+
+.patient-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #fde9f2; /* Placeholder background matching the pink */
+}
+
+.event-link {
+    display: inline-block;
+    padding: 5px 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+.event-link:hover {
+    background-color: #e9ecef;
+}
+
+.event-link .edit-text {
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+/* Main Content Form & Data Grid */
+.section-header {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #dee2e6;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #343a40;
+}
+
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.data-item {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.data-item label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #495057;
+    font-size: 0.85rem;
+}
+
+.data-item input,
+.data-item textarea,
+.data-item select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+}
+.data-item input:focus,
+.data-item textarea:focus,
+.data-item select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.data-item textarea {
+    height: 80px;
+}
+
+.grid-span-all {
+    grid-column: 1 / -1;
+}
+
+.checkbox-container {
+    column-count: 3;
+    column-gap: 20px;
+    padding-top: 10px;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    break-inside: avoid-column;
+}
+
+.checkbox-option input[type="checkbox"] {
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 8px;
+}
+
+.checkbox-option label {
+    font-weight: normal;
+    margin-bottom: 0;
+    color: #212529;
+}
+
+/* Treatment Record Table */
+.treatment-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.treatment-table th,
+.treatment-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.treatment-table th {
+    background-color: #f5f5f5;
+}
+
+
+/* ============================
+   3. RESPONSIVE ADJUSTMENTS
+   ============================ */
+@media (max-width: 992px) {
+    .data-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+     .checkbox-container {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        left: -250px;
+    }
+    .topbar {
+        left: 0;
+        width: 100%;
+    }
+    .main-content-area {
+        margin-left: 0;
+        width: 100%;
+    }
+    .data-grid, .checkbox-container {
+        grid-template-columns: 1fr;
+        column-count: 1;
+    }
+}
