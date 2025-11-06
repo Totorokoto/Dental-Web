@@ -1,0 +1,283 @@
+<?php
+// FILE: admin/patient_add.php 
+require 'includes/header.php';
+
+// Fetch active dentists/admins from the current user's branch for the dropdowns
+$dentists_list = [];
+$user_branch = $_SESSION['branch'];
+$sql_dentists = "SELECT user_id, full_name FROM users WHERE is_active = 1 AND branch = ? AND role IN ('Dentist', 'Admin') ORDER BY full_name ASC";
+if ($stmt = $conn->prepare($sql_dentists)) {
+    $stmt->bind_param("s", $user_branch);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $dentists_list[] = $row;
+    }
+    $stmt->close();
+}
+?>
+
+<!-- Custom styles for the registration form -->
+<style>
+    .form-section-card {
+        border-radius: 1rem;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+    }
+    .accordion-item { border: none; border-bottom: 1px solid #e9ecef; }
+    .accordion-item:last-child { border-bottom: none; }
+    .accordion-button { font-size: 1.1rem; font-weight: 600; color: #343a40; }
+    .accordion-button:not(.collapsed) { color: var(--primary-color); background-color: #e6f0f3; box-shadow: inset 0 -1px 0 #dee2e6; }
+    .accordion-button:focus { box-shadow: 0 0 0 0.25rem rgba(0, 121, 107, 0.25); border-color: var(--primary-color); }
+    .accordion-body { background-color: #f8f9fa; }
+    .form-label { font-weight: 500; }
+    .form-control, .form-select { border-radius: 0.5rem; }
+    .form-control:focus, .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.25rem rgba(0, 121, 107, 0.25); }
+    .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); padding: 0.75rem 1.5rem; font-size: 1.1rem; }
+    .btn-primary:hover { background-color: #00695C; border-color: #00695C; }
+</style>
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">New Patient Registration</h1>
+    <a href="patients.php" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Cancel & Go Back
+    </a>
+</div>
+
+<!-- Main Form Container -->
+<div class="card form-section-card">
+<div class="card-body p-lg-4">
+    
+    <div class="alert alert-light border" role="alert">
+      Please complete all sections below. Fields marked with a <span class="text-danger">*</span> are required.
+    </div>
+
+    <form action="patient_add_process.php" method="POST" id="patientForm">
+
+        <div class="accordion" id="patientRegistrationAccordion">
+        
+          <!-- ACCORDION ITEM 1: PATIENT INFORMATION -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <i class="fas fa-user-circle me-2"></i> Section 1: Patient Information
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#patientRegistrationAccordion">
+              <div class="accordion-body">
+                <div class="row g-3">
+                    <div class="col-md-4"><label for="last_name" class="form-label">Last Name <span class="text-danger">*</span></label><input type="text" class="form-control" id="last_name" name="last_name" required></div>
+                    <div class="col-md-4"><label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label><input type="text" class="form-control" id="first_name" name="first_name" required></div>
+                    <div class="col-md-4"><label for="middle_name" class="form-label">Middle Name</label><input type="text" class="form-control" id="middle_name" name="middle_name"></div>
+                    <div class="col-12"><label for="address" class="form-label">Address <span class="text-danger">*</span></label><input type="text" class="form-control" id="address" name="address" required></div>
+                    <div class="col-md-3"><label for="birthdate" class="form-label">Birthdate <span class="text-danger">*</span></label><input type="text" class="form-control date-picker-past" id="birthdate" name="birthdate" placeholder="YYYY-MM-DD" required> <span id="ageDisplay" class="text-muted small ms-2"></span></div>
+                    <div class="col-md-2"><label for="gender" class="form-label">Gender <span class="text-danger">*</span></label><select id="gender" name="gender" class="form-select" required><option selected disabled value="">Choose...</option><option value="M">Male</option><option value="F">Female</option></select></div>
+                    <div class="col-md-2"><label for="nickname" class="form-label">Nickname</label><input type="text" class="form-control" id="nickname" name="nickname"></div>
+                    <div class="col-md-3"><label for="civil_status" class="form-label">Civil Status <span class="text-danger">*</span></label><input type="text" class="form-control" id="civil_status" name="civil_status" required></div>
+                    <div class="col-md-2"><label for="nationality" class="form-label">Nationality</label><input type="text" class="form-control" id="nationality" name="nationality"></div>
+                    <div class="col-md-4"><label for="occupation" class="form-label">Occupation</label><input type="text" class="form-control" id="occupation" name="occupation"></div>
+                    <div class="col-md-4"><label for="religion" class="form-label">Religion</label><input type="text" class="form-control" id="religion" name="religion"></div>
+                    <div class="col-md-4"><label for="mobile_no" class="form-label">Mobile # <span class="text-danger">*</span></label><input type="tel" class="form-control" id="mobile_no" name="mobile_no" required maxlength="13"></div>
+                    <div class="col-md-6"><label for="parent_guardian_name" class="form-label">For Minors: Parent/Guardian's Name</label><input type="text" class="form-control" id="parent_guardian_name" name="parent_guardian_name"></div>
+                    <div class="col-md-6"><label for="parent_guardian_occupation" class="form-label">For Minors: Parent/Guardian's Occupation</label><input type="text" class="form-control" id="parent_guardian_occupation" name="parent_guardian_occupation"></div>
+                    <div class="col-md-6"><label for="email" class="form-label">Email Address</label><input type="email" class="form-control" id="email" name="email"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <!-- ACCORDION ITEM 2: DENTAL INFORMATION -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <i class="fas fa-tooth me-2"></i> Section 2: Dental Information
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#patientRegistrationAccordion">
+              <div class="accordion-body">
+                <div class="row g-3">
+                    <div class="col-md-6"><label for="chief_complaint" class="form-label">Chief Complaint <span class="text-danger">*</span></label><textarea class="form-control" id="chief_complaint" name="chief_complaint" rows="2" required></textarea></div>
+                    <div class="col-md-6"><label for="history_of_present_illness" class="form-label">History of Present Illness</label><textarea class="form-control" id="history_of_present_illness" name="history_of_present_illness" rows="2"></textarea></div>
+                    
+                    <!-- CHANGED: Previous Dentist is now a dropdown -->
+                    <div class="col-md-6">
+                        <label for="previous_dentist" class="form-label">Previous Dentist</label>
+                        <select class="form-select" id="previous_dentist" name="previous_dentist">
+                            <option value="" selected>None / Not Applicable</option>
+                            <?php foreach($dentists_list as $dentist): ?>
+                                <option value="<?php echo htmlspecialchars($dentist['full_name']); ?>"><?php echo htmlspecialchars($dentist['full_name']); ?></option>
+                            <?php endforeach; ?>
+                            <option value="Other / Not Listed">Other / Not Listed</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6"><label for="last_dental_visit" class="form-label">Last Dental Visit</label><input type="text" class="form-control date-picker-past" id="last_dental_visit" name="last_dental_visit" placeholder="YYYY-MM-DD"></div>
+                    <div class="col-12 mt-3"><label class="form-label fw-bold">Procedures Done (Previous)</label><div class="d-flex flex-wrap"><div class="form-check me-3"><input class="form-check-input" type="checkbox" name="procedures_done_perio" value="1" id="proc_perio"><label class="form-check-label" for="proc_perio">Perio</label></div><div class="form-check me-3"><input class="form-check-input" type="checkbox" name="procedures_done_resto" value="1" id="proc_resto"><label class="form-check-label" for="proc_resto">Resto</label></div><div class="form-check me-3"><input class="form-check-input" type="checkbox" name="procedures_done_os" value="1" id="proc_os"><label class="form-check-label" for="proc_os">O.S.</label></div><div class="form-check me-3"><input class="form-check-input" type="checkbox" name="procedures_done_prostho" value="1" id="proc_prostho"><label class="form-check-label" for="proc_prostho">Prostho</label></div><div class="form-check me-3"><input class="form-check-input" type="checkbox" name="procedures_done_endo" value="1" id="proc_endo"><label class="form-check-label" for="proc_endo">Endo</label></div><div class="form-check me-3"><input class="form-check-input" type="checkbox" name="procedures_done_ortho" value="1" id="proc_ortho"><label class="form-check-label" for="proc_ortho">Ortho</label></div></div></div>
+                    <div class="col-md-6"><label for="procedures_done_others_specify" class="form-label">Others, Specify:</label><input type="text" class="form-control" id="procedures_done_others_specify" name="procedures_done_others_specify"></div>
+                    <div class="col-md-6"><label for="complications" class="form-label">Complications, if any:</label><input type="text" class="form-control" id="complications" name="complications"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <!-- ACCORDION ITEM 3: MEDICAL INFORMATION -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <i class="fas fa-heartbeat me-2"></i> Section 3: Medical Information
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#patientRegistrationAccordion">
+              <div class="accordion-body">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label for="physician_name" class="form-label">Name of Physician</label>
+                        <select class="form-select" id="physician_name" name="physician_name">
+                            <option value="" selected>None / Not Applicable</option>
+                            <?php foreach($dentists_list as $dentist): ?>
+                                <option value="<?php echo htmlspecialchars($dentist['full_name']); ?>"><?php echo htmlspecialchars($dentist['full_name']); ?></option>
+                            <?php endforeach; ?>
+                            <option value="Other">Other (Not Listed)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4"><label for="physician_address" class="form-label">Address</label><input type="text" class="form-control" id="physician_address" name="physician_address"></div>
+                    <div class="col-md-3"><label for="physician_phone" class="form-label">Phone Number</label><input type="tel" class="form-control" id="physician_phone" name="physician_phone" maxlength="13"></div>
+                    <div class="col-md-12"><label for="last_physical_exam" class="form-label">Date of Last Physical Examination</label><input type="text" class="form-control date-picker-past" id="last_physical_exam" name="last_physical_exam" placeholder="YYYY-MM-DD"></div>
+                    <hr class="my-4">
+                    <div class="col-md-6"><p class="mb-1">Are you in good health? <span class="text-danger">*</span></p><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="are_you_in_good_health" id="health_yes" value="1" required><label class="form-check-label" for="health_yes">Yes</label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="are_you_in_good_health" id="health_no" value="0"><label class="form-check-label" for="health_no">No</label></div></div>
+                    <div class="col-md-6"><p class="mb-1">Are you under medical treatment now? <span class="text-danger">*</span></p><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="is_under_medical_treatment" id="treat_yes" value="1" required><label class="form-check-label" for="treat_yes">Yes</label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="is_under_medical_treatment" id="treat_no" value="0"><label class="form-check-label" for="treat_no">No</label></div><label class="form-label mt-1">If so, what is the condition being treated?</label><input type="text" class="form-control form-control-sm" name="medical_treatment_details"></div>
+                    <div class="col-md-6 mt-3"><p class="mb-1">Have you ever had serious illness or surgical operation? <span class="text-danger">*</span></p><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="had_serious_illness_or_operation" id="op_yes" value="1" required><label class="form-check-label" for="op_yes">Yes</label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="had_serious_illness_or_operation" id="op_no" value="0"><label class="form-check-label" for="op_no">No</label></div><label class="form-label mt-1">If so, what illness or operation?</label><input type="text" class="form-control form-control-sm" name="illness_operation_details"></div>
+                    <div class="col-md-6 mt-3"><p class="mb-1">Have you ever been hospitalized? <span class="text-danger">*</span></p><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="has_been_hospitalized" id="hosp_yes" value="1" required><label class="form-check-label" for="hosp_yes">Yes</label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="has_been_hospitalized" id="hosp_no" value="0"><label class="form-check-label" for="hosp_no">No</label></div><label class="form-label mt-1">If so, when and why?</label><input type="text" class="form-control form-control-sm" name="hospitalization_details"></div>
+                    <div class="col-md-6 mt-3"><p class="mb-1">Are you taking any prescription/non-prescription medication? <span class="text-danger">*</span></p><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="is_taking_medication" id="med_yes" value="1" required><label class="form-check-label" for="med_yes">Yes</label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="is_taking_medication" id="med_no" value="0"><label class="form-check-label" for="med_no">No</label></div><label class="form-label mt-1">If so, please specify:</label><input type="text" class="form-control form-control-sm" name="medication_details"></div>
+                    <div class="col-md-6 mt-3"><p class="mb-1">Are you taking any diet drugs? <span class="text-danger">*</span></p><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="is_on_diet" id="diet_yes" value="1" required><label class="form-check-label" for="diet_yes">Yes</label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="is_on_diet" id="diet_no" value="0"><label class="form-check-label" for="diet_no">No</label></div><label class="form-label mt-1">If yes, what diet drugs are you taking?</label><input type="text" class="form-control form-control-sm" name="diet_details"></div>
+                    <hr class="my-4">
+                    <div class="col-md-6"><p class="mb-1">Do you drink alcoholic beverages? <span class="text-danger">*</span></p><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="drinks_alcoholic_beverages" value="1" required><label class="form-check-label">Yes</label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="drinks_alcoholic_beverages" value="0"><label class="form-check-label">No</label></div><label class="form-label mt-1">If yes, how much alcohol did you drink in the last 24 hours?</label><input type="text" class="form-control form-control-sm" name="alcohol_frequency"></div>
+                    <div class="col-md-6"><p class="mb-1">Do you use tobacco (smoking, snuff, and chew)? <span class="text-danger">*</span></p><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="uses_tobacco" value="1" required><label class="form-check-label">Yes</label></div><div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="uses_tobacco" value="0"><label class="form-check-label">No</label></div><label class="form-label mt-1">If yes, what type?</label><input type="text" class="form-control form-control-sm" name="tobacco_details"></div>
+                    <hr class="my-4">
+                    <div class="col-12"><strong>Are you allergic to any of the following?</strong></div>
+                    <div class="row"><div class="col-md-auto"><div class="form-check"><input class="form-check-input" type="checkbox" name="allergic_anesthetics" value="1" id="cb_a1"><label class="form-check-label" for="cb_a1">Anesthetics (e.g. Lidocaine)</label></div></div><div class="col-md-auto"><div class="form-check"><input class="form-check-input" type="checkbox" name="allergic_penicillin" value="1" id="cb_a2"><label class="form-check-label" for="cb_a2">Penicillin / Antibiotics</label></div></div><div class="col-md-auto"><div class="form-check"><input class="form-check-input" type="checkbox" name="allergic_aspirin" value="1" id="cb_a3"><label class="form-check-label" for="cb_a3">Aspirin</label></div></div><div class="col-md-auto"><div class="form-check"><input class="form-check-input" type="checkbox" name="allergic_latex" value="1" id="cb_a4"><label class="form-check-label" for="cb_a4">Latex</label></div></div></div>
+                    <div class="col-md-6 mt-2"><label class="form-label">Other allergies, please specify:</label><input type="text" class="form-control" name="allergic_others_details"></div>
+                    <div class="col-md-6 mt-2"><label class="form-label">If yes, what type of reaction?</label><input type="text" class="form-control" name="allergy_reaction_details"></div>
+                    <hr class="my-4">
+                    <div class="col-12"><strong>Do you have or have you had any of the following? (Check which apply):</strong></div>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2">
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_high_blood_pressure" value="1" id="cb1"><label class="form-check-label" for="cb1">High Blood Pressure</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_low_blood_pressure" value="1" id="cb2"><label class="form-check-label" for="cb2">Low Blood Pressure</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_epilepsy_convulsions" value="1" id="cb3"><label class="form-check-label" for="cb3">Epilepsy / Convulsions</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_aids_hiv" value="1" id="cb4"><label class="form-check-label" for="cb4">AIDS or HIV Infection</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_stomach_troubles_ulcer" value="1" id="cb5"><label class="form-check-label" for="cb5">Stomach Troubles / Ulcer</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_fainting_seizure" value="1" id="cb6"><label class="form-check-label" for="cb6">Fainting Seizure</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_rapid_weight_loss" value="1" id="cb7"><label class="form-check-label" for="cb7">Rapid Weight Loss</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="had_radiation_therapy" value="1" id="cb8"><label class="form-check-label" for="cb8">Radiation Therapy</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_joint_replacement_implant" value="1" id="cb9"><label class="form-check-label" for="cb9">Joint Replacement / Implant</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="had_heart_surgery" value="1" id="cb10"><label class="form-check-label" for="cb10">Heart Surgery</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="had_heart_attack" value="1" id="cb11"><label class="form-check-label" for="cb11">Heart Attack</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_heart_disease" value="1" id="cb12"><label class="form-check-label" for="cb12">Heart Disease</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_heart_murmur" value="1" id="cb13"><label class="form-check-label" for="cb13">Heart Murmur</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_hepatitis_jaundice" value="1" id="cb14"><label class="form-check-label" for="cb14">Hepatitis / Jaundice</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_tuberculosis" value="1" id="cb15"><label class="form-check-label" for="cb15">Tuberculosis</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_swollen_ankles" value="1" id="cb16"><label class="form-check-label" for="cb16">Swollen Ankles</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_kidney_disease" value="1" id="cb17"><label class="form-check-label" for="cb17">Kidney Disease</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_diabetes" value="1" id="cb18"><label class="form-check-label" for="cb18">Diabetes</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_bleeding_blood_disease" value="1" id="cb19"><label class="form-check-label" for="cb19">Bleeding / Blood Disease</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_arthritis_rheumatism" value="1" id="cb20"><label class="form-check-label" for="cb20">Arthritis / Rheumatism</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_cancer_tumor" value="1" id="cb21"><label class="form-check-label" for="cb21">Cancer / Tumor</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_anemia" value="1" id="cb22"><label class="form-check-label" for="cb22">Anemia</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_angina" value="1" id="cb23"><label class="form-check-label" for="cb23">Angina</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_asthma" value="1" id="cb24"><label class="form-check-label" for="cb24">Asthma</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_thyroid_problem" value="1" id="cb25"><label class="form-check-label" for="cb25">Thyroid Problem</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_rheumatic_fever_disease" value="1" id="cb26"><label class="form-check-label" for="cb26">Rheumatic Fever</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_hay_fever_allergies" value="1" id="cb27"><label class="form-check-label" for="cb27">Hay Fever / Allergies</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_respiratory_problems" value="1" id="cb28"><label class="form-check-label" for="cb28">Respiratory Problems</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_emphysema" value="1" id="cb29"><label class="form-check-label" for="cb29">Emphysema</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_breathing_problems" value="1" id="cb30"><label class="form-check-label" for="cb30">Breathing Problems</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="had_stroke" value="1" id="cb31"><label class="form-check-label" for="cb31">Stroke</label></div></div>
+                        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" name="has_chest_pain" value="1" id="cb32"><label class="form-check-label" for="cb32">Chest Pain</label></div></div>
+                    </div>
+                    <div class="col-12 mt-3"><label class="form-label">Others, please explain:</label><textarea class="form-control" name="other_diseases_details" rows="2"></textarea></div>
+                    <hr class="my-4">
+                    <div class="col-12">
+                        <label for="other_conditions_to_know" class="form-label">Do you have any disease, condition or problem not listed above that you think your dentist should know about? If yes, please explain:</label>
+                        <textarea class="form-control" id="other_conditions_to_know" name="other_conditions_to_know" rows="3"></textarea>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACCORDION ITEM 4: VITAL SIGNS -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                <i class="fas fa-stethoscope me-2"></i> Section 4: Vital Signs
+              </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#patientRegistrationAccordion">
+              <div class="accordion-body">
+                  <div class="row">
+                    <div class="col-md-3"><label class="form-label">Blood Pressure:</label><input type="text" class="form-control" name="blood_pressure" placeholder="e.g., 120/80"></div>
+                    <div class="col-md-3"><label class="form-label">Respiratory Rate:</label><input type="text" class="form-control" name="respiratory_rate" placeholder="e.g., 16"></div>
+                    <div class="col-md-3"><label class="form-label">Pulse Rate:</label><input type="text" class="form-control" name="pulse_rate" placeholder="e.g., 72"></div>
+                    <div class="col-md-3"><label class="form-label">Temperature:</label><input type="text" class="form-control" name="temperature" placeholder="e.g., 36.5°C"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div> <!-- End Accordion -->
+
+        <!-- CONSENT & SUBMISSION -->
+        <div class="mt-4 p-3 bg-light border rounded">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="consentCheck" required>
+                <label class="form-check-label" for="consentCheck"> 
+                    I hereby certify that all entries made in this health history form are true and correct to the best of my knowledge. I also give my consent to the performance of the recommended dental procedures that may be considered necessary. <span class="text-danger">*</span>
+                </label>
+            </div>
+        </div>
+        <div class="col-12 mt-4 text-center">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-save me-2"></i>Save Patient Record
+            </button>
+        </div>
+
+    </form> <!-- End Form -->
+</div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    flatpickr(".date-picker-past", {
+        dateFormat: "Y-m-d",
+        allowInput: true,
+        maxDate: "today"
+    });
+
+    function calculateAge() {
+        const birthdateInput = document.getElementById('birthdate');
+        const ageDisplay = document.getElementById('ageDisplay');
+        if (birthdateInput.value) {
+            const dob = new Date(birthdateInput.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) { age--; }
+            ageDisplay.textContent = age > 0 ? `(${age} years old)` : '';
+        } else { ageDisplay.textContent = ''; }
+    }
+    
+    flatpickr("#birthdate", {
+        dateFormat: "Y-m-d",
+        allowInput: true,
+        maxDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+            calculateAge();
+        }
+    });
+});
+</script>
+
+
+<?php require 'includes/footer.php'; ?>
